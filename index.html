@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ren</title>
+    <style>
+        /* 全局极简样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        /* 基础极简样式 */
+        body {
+            background-color: #fafafa; /* 极简浅灰背景 */
+            color: #333;
+            line-height: 1.8;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: #444;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2px; /* 极简圆角 */
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #222;
+        }
+
+        input, select, textarea {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+            font-size: 1rem;
+            background: white;
+            width: 100%;
+        }
+
+        /* 头部导航 - 极简样式 */
+        header {
+            background-color: white;
+            border-bottom: 1px solid #eee; /* 极简分割线 */
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: #222;
+        }
+
+        /* 主内容区 */
+        main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 5%;
+        }
+
+        /* 搜索栏 - 极简 */
+        .search-section {
+            background-color: white;
+            padding: 1.2rem;
+            border: 1px solid #eee;
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+        }
+
+        /* 分类筛选 - 极简 */
+        .category-section {
+            margin-bottom: 2rem;
+        }
+
+        .category-list {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .category-item {
+            padding: 0.5rem 1.2rem;
+            background-color: white;
+            border: 1px solid #eee;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .category-item.active {
+            background-color: #444;
+            color: white;
+            border-color: #444;
+        }
+
+        /* 资料列表 - 纯文字极简卡片 */
+        .resource-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .resource-card {
+            background-color: white;
+            border: 1px solid #eee;
+            padding: 1.2rem;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: border 0.2s;
+        }
+
+        .resource-card:hover {
+            border-left: 3px solid #444; /* 极简hover效果 */
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #222;
+        }
+
+        .card-desc {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .card-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .detail-btn {
+            background: #666;
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* 模态框 - 极简样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.1); /* 极简半透明背景 */
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 700px;
+            border: 1px solid #eee;
+            padding: 2rem;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .modal-meta {
+            margin-bottom: 1rem;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .modal-desc {
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+        }
+
+        .modal-btn {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+        }
+
+        .secondary-btn {
+            background: #eee;
+            color: #666;
+        }
+
+        /* 上传表单 - 极简 */
+        .upload-form {
+            display: grid;
+            gap: 1.2rem;
+        }
+
+        .form-group label {
+            font-size: 0.95rem;
+            color: #444;
+            margin-bottom: 0.3rem;
+            display: block;
+        }
+
+        /* 底部 - 极简 */
+        footer {
+            background-color: white;
+            border-top: 1px solid #eee;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+            }
+            .search-box {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部导航 -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">北京卷文科（by:ren)</div>
+            <nav class="nav-links">
+                <a href="#" style="color: #222;">首页</a>
+                <a href="#">关于我们</a>
+            </nav>
+            <button id="uploadBtn">上传资料</button>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main>
+        <!-- 搜索栏 -->
+        <section class="search-section">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="搜索资料名称、关键词、上传者...">
+                <button class="search-btn">搜索</button>
+            </div>
+        </section>
+
+        <!-- 分类筛选 -->
+        <section class="category-section">
+            <div class="category-list">
+                <div class="category-item active" data-category="all">全部</div>
+                <div class="category-item" data-category="computer">语文</div>
+                <div class="category-item" data-category="math">英语</div>
+                <div class="category-item" data-category="english">历史</div>
+
+            </div>
+        </section>
+
+        <!-- 资料列表（纯文字） -->
+        <section class="resource-section">
+            <div class="resource-list" id="resourceList">
+                <!-- 资料卡片1 -->
+               <div class="resource-card" data-category="computer">
+                    <h3 class="card-title">语文</h3>
+                    <p class="card-desc">主要是高一的语文试卷，有少部分合格考题和高考题。链接: https://pan.baidu.com/s/1YRba-S8hwYTnXAf8F3kPUQ?pwd=1234
+                    </p>
+                    <div class="card-meta">
+                
+                    </div>
+                    <div class="card-actions">
+                        <button class="detail-btn resource-detail">查看详情</button>
+                    </div>
+                </div>
+
+                <!-- 资料卡片2 -->
+                <div class="resource-card" data-category="math">
+                    <h3 class="card-title">英语专题汇编册</h3>
+                    <p class="card-desc">节选了近五年来北京高考英语各专题练习。链接: https://pan.baidu.com/s/16fC7fXOE1pDPth-nylKvEw?pwd=1234</p>
+                    <div class="card-meta">
+                    </div>
+                    <div class="card-actions">
+                        <button class="detail-btn resource-detail">查看详情</button>
+                    </div>
+                </div>
+
+                <!-- 资料卡片3 -->
+                <div class="resource-card" data-category="english">
+                    <h3 class="card-title">历史</h3>
+                    <p class="card-desc">北京高考等级考试卷、纲要上复习笔记。链接: https://pan.baidu.com/s/1zAuSBIRWGraKLMxTogtxTA?pwd=1234</p>
+                    <div class="card-meta">
+                    </div>
+                    <div class="card-actions">
+                        <button class="detail-btn resource-detail">查看详情</button>
+                    </div>
+                </div>
+
+                
+                  
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 资料详情模态框 -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeDetail">&times;</span>
+            <div class="modal-header">
+                <h2 id="modalTitle">Python编程从入门到精通</h2>
+            </div>
+            <div class="modal-body">
+                <div class="modal-meta">
+                    <strong>上传者：</strong> <span id="modalAuthor">编程小白</span><br>
+                    <strong>下载量：</strong> <span id="modalDownload">1258</span><br>
+                    <strong>分类：</strong> <span id="modalCategory">计算机</span><br>
+                    <strong>上传时间：</strong> <span id="modalTime">2024-01-15</span>
+                </div>
+                <div class="modal-desc">
+                    <h4 style="margin-bottom: 0.5rem; color: #333;">资料简介：</h4>
+                    <p id="modalDesc">零基础入门Python编程，包含实战项目和练习题，适合初学者。本资料涵盖Python基础语法、面向对象编程、文件操作、网络编程、数据分析等内容，附带100+实战案例和课后习题，是Python入门的优质学习资料。</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary-btn" id="cancelDetail">关闭</button>
+                <button class="modal-btn">立即下载</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 上传资料模态框 -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeUpload">&times;</span>
+            <div class="modal-header">
+                <h2>上传学习资料</h2>
+            </div>
+            <div class="modal-body">
+                <form class="upload-form">
+                    <div class="form-group">
+                        <label for="resourceTitle">资料标题</label>
+                        <input type="text" id="resourceTitle" placeholder="请输入资料标题" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="resourceCategory">资料分类</label>
+                        <select id="resourceCategory" required>
+                            <option value="">请选择分类</option>
+                            <option value="computer">计算机</option>
+                            <option value="math">数学</option>
+                            <option value="english">英语</option>
+                            <option value="management">管理学</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resourceDesc">资料描述</label>
+                        <textarea id="resourceDesc" rows="4" placeholder="请简要描述资料内容" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="resourceFile">上传文件</label>
+                        <input type="file" id="resourceFile" accept=".pdf,.doc,.docx,.ppt,.pptx,.zip,.rar" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary-btn" id="cancelUpload">取消</button>
+                <button class="modal-btn" id="submitUpload">确认上传</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <footer>
+        <p>by ren</p>
+    </footer>
+
+    <script>
+        // 获取DOM元素
+        const uploadBtn = document.getElementById('uploadBtn');
+        const uploadModal = document.getElementById('uploadModal');
+        const closeUpload = document.getElementById('closeUpload');
+        const cancelUpload = document.getElementById('cancelUpload');
+        const submitUpload = document.getElementById('submitUpload');
+        
+        const detailModal = document.getElementById('detailModal');
+        const closeDetail = document.getElementById('closeDetail');
+        const cancelDetail = document.getElementById('cancelDetail');
+        const resourceDetails = document.querySelectorAll('.resource-detail');
+        
+        const categoryItems = document.querySelectorAll('.category-item');
+        const resourceCards = document.querySelectorAll('.resource-card');
+
+        // 上传模态框交互
+        uploadBtn.addEventListener('click', () => {
+            uploadModal.style.display = 'flex';
+        });
+
+        function closeUploadModal() {
+            uploadModal.style.display = 'none';
+            document.querySelector('.upload-form').reset();
+        }
+
+        closeUpload.addEventListener('click', closeUploadModal);
+        cancelUpload.addEventListener('click', closeUploadModal);
+
+        submitUpload.addEventListener('click', () => {
+            const title = document.getElementById('resourceTitle').value;
+            if (!title) {
+                alert('请填写资料标题！');
+                return;
+            }
+            alert('还不支持。');
+            closeUploadModal();
+        });
+
+        // 详情模态框交互
+        resourceDetails.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                // 获取卡片信息
+                const card = btn.closest('.resource-card');
+                const title = card.querySelector('.card-title').textContent;
+                const meta = card.querySelector('.card-meta').textContent.split(' ');
+                
+                // 解析元数据
+                const author = meta[1].replace(':', '').trim();
+                const download = meta[3].replace(':', '').trim();
+                const time = meta[5].replace(':', '').trim();
+                const category = card.dataset.category;
+                const desc = card.querySelector('.card-desc').textContent;
+                
+                // 设置模态框内容
+                document.getElementById('modalTitle').textContent = title;
+                document.getElementById('modalAuthor').textContent = author;
+                document.getElementById('modalDownload').textContent = download;
+                document.getElementById('modalTime').textContent = time;
+                
+                // 转换分类显示名称
+                const categoryMap = {
+                    'computer': '计算机',
+                    'math': '数学',
+                    'english': '英语',
+                    'management': '管理学',
+                    'other': '其他'
+                };
+                document.getElementById('modalCategory').textContent = categoryMap[category];
+                document.getElementById('modalDesc').textContent = desc;
+                
+                // 显示模态框
+                detailModal.style.display = 'flex';
+            });
+        });
+
+        function closeDetailModal() {
+            detailModal.style.display = 'none';
+        }
+
+        closeDetail.addEventListener('click', closeDetailModal);
+        cancelDetail.addEventListener('click', closeDetailModal);
+
+        // 分类筛选交互
+        categoryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // 移除所有active类
+                categoryItems.forEach(i => i.classList.remove('active'));
+                // 添加当前active类
+                item.classList.add('active');
+                
+                const selectedCategory = item.dataset.category;
+                
+                // 筛选卡片
+                resourceCards.forEach(card => {
+                    if (selectedCategory === 'all' || card.dataset.category === selectedCategory) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // 点击模态框外部关闭
+        window.addEventListener('click', (e) => {
+            if (e.target === detailModal) closeDetailModal();
+            if (e.target === uploadModal) closeUploadModal();
+        });
+    </script>
+</body>
+</html>
